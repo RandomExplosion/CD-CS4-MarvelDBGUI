@@ -14,9 +14,63 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <materialDesign:Card HorizontalAlignment="Stretch" Margin="0,10,0,0" VerticalAlignment="Top" Height="45" Width="780">
-            <TextBlock HorizontalAlignment="Left" Margin="20,0,0,0" Text="TextBlock" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center"/>
+
+    <Window.Resources>
+        <!--Menu Expand Animation--><!--
+        <Storyboard x:Key="MenuExpand">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="MenuPanel">
+                <EasingDoubleKeyFrame KeyTime="0" Value="70"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        --><!--Menu Collapse Animation--><!--
+        <Storyboard x:Key="MenuCollapse">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="MenuPanel">
+                <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="70"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>-->
+    </Window.Resources>
+
+    <Window.Triggers>
+        <!--Menu Expand Event-->
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonMenuExpand">
+            <BeginStoryboard Storyboard="{StaticResource MenuExpand}"/>
+        </EventTrigger>
+        <!--Menu Collapse Event-->
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonMenuCollapse">
+            <BeginStoryboard Storyboard="{StaticResource MenuCollapse}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Ribbon" Height="1*"/>
+            <RowDefinition x:Name="DataTable" Height="10*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SideBar" Width="2*"/>
+            <ColumnDefinition x:Name="DataColumn" Width="8*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Window Header-->
+        <materialDesign:Card Grid.ColumnSpan="2" Background="{DynamicResource MaterialDesignCardBackground}">
+            <TextBlock HorizontalAlignment="Center" Text="MarvelDB SuperHero Database" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center" FontFamily="Roboto" FontWeight="Bold" FontSize="16"/>
         </materialDesign:Card>
+
+        
+
+        <!--Data Table-->
+        <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" Background="{DynamicResource MaterialDesignDarkBackground}" >
+            <DataGrid.Columns>
+                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Hero Alias" FontWeight="Bold"/>
+                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Real Name" FontWeight="Bold"/>
+                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Height" FontWeight="Bold"/>
+                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Weight" FontWeight="Bold"/>
+                <materialDesign:DataGridComboBoxColumn Header="Race" IsEditable="True"/>
+                <DataGridCheckBoxColumn Header="In Movie?"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
 </Window>
