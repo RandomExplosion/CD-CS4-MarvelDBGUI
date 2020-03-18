@@ -1,4 +1,4 @@
-﻿<Window x:Class="MarvelDB.MainWindow"
+﻿<Window x:Class="MarvelDB.MarvelDBWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,7 +13,8 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <Window.Resources>
         <!--Menu Expand Animation--><!--
@@ -30,17 +31,24 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="70"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>-->
+        
+        <!--Data Provider for Enum Types-->
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="GetEnumValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:Race"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </Window.Resources>
 
     <Window.Triggers>
-        <!--Menu Expand Event-->
+        <!--Menu Expand Event--><!--
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonMenuExpand">
             <BeginStoryboard Storyboard="{StaticResource MenuExpand}"/>
         </EventTrigger>
-        <!--Menu Collapse Event-->
+        --><!--Menu Collapse Event--><!--
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonMenuCollapse">
             <BeginStoryboard Storyboard="{StaticResource MenuCollapse}"/>
-        </EventTrigger>
+        </EventTrigger>-->
     </Window.Triggers>
 
     <Grid x:Name="RootGrid">
@@ -61,14 +69,21 @@
         
 
         <!--Data Table-->
-        <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" Background="{DynamicResource MaterialDesignDarkBackground}" >
+        <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" GridLinesVisibility="All" ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Hero Alias" FontWeight="Bold"/>
-                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Real Name" FontWeight="Bold"/>
-                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Height" FontWeight="Bold"/>
-                <materialDesign:DataGridTextColumn CanUserSort="True" Header="Weight" FontWeight="Bold"/>
-                <materialDesign:DataGridComboBoxColumn Header="Race" IsEditable="True"/>
-                <DataGridCheckBoxColumn Header="In Movie?"/>
+                <!--Hero Names-->
+                <materialDesign:DataGridTextColumn Header="Hero Name" Binding="{Binding Path=heroName}" SortMemberPath="{Binding Path=heroName}"/>
+                <!--Real Names-->
+                <materialDesign:DataGridTextColumn Header="Real Name" Binding="{Binding Path=realName}" SortMemberPath="{Binding Path=realName}"/>
+                <!--Hero Weight-->
+                <materialDesign:DataGridTextColumn Header="Weight" Binding="{Binding Path=weight}" SortMemberPath="{Binding Path=weight}"/>
+                <!--Hero Height-->
+                <materialDesign:DataGridTextColumn Header="Height" Binding="{Binding Path=height}" SortMemberPath="{Binding Path=height}"/>
+                <!--Hero Race-->
+                <materialDesign:DataGridComboBoxColumn Header="Race" ItemsSource="{Binding Source={StaticResource GetEnumValues}}" SelectedItemBinding="{Binding race}" SortMemberPath="{Binding Path=race}"/>
+                <!--Is the hero in a movie yet?-->
+                <DataGridCheckBoxColumn Header="InMovie" Binding="{Binding Path=inMovie}" SortMemberPath="{Binding Path=inMovie}"
+                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
             </DataGrid.Columns>
         </DataGrid>
 
