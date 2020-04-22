@@ -15,7 +15,7 @@ namespace CSharp_MinorBoss_ConsoleApp
         /// Source: https://www.codeproject.com/Articles/415732/Reading-and-Writing-CSV-Files-in-Csharp
         /// </summary>
         
-        public static HeroTable dbTable;
+        public static HeroTable dbTable = new HeroTable();
 
         static void WriteTest()
         {

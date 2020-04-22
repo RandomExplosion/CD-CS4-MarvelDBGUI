@@ -33,11 +33,11 @@
         </Storyboard>-->
         
         <!--Data Provider for Enum Types-->
-        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="GetEnumValues">
+        <!--<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="GetEnumValues">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="local:Race"/>
             </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+        </ObjectDataProvider>-->
     </Window.Resources>
 
     <Window.Triggers>
@@ -69,20 +69,34 @@
         
 
         <!--Data Table-->
-        <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" GridLinesVisibility="All" ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False">
+        <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" GridLinesVisibility="All" ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CanUserAddRows="True">
+            <DataGrid.Resources>
+                <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
+                    <Setter Property="Padding" Value="-2"/>
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="ToolTip" 
+          Value="{Binding RelativeSource={RelativeSource Self},
+            Path=(Validation.Errors)[0].ErrorContent}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <!--Hero Names-->
-                <materialDesign:DataGridTextColumn Header="Hero Name" Binding="{Binding Path=heroName}" SortMemberPath="{Binding Path=heroName}"/>
+                <materialDesign:DataGridTextColumn Header="Hero Name" Binding="{Binding Path=HeroName, Mode=TwoWay}" SortMemberPath="{Binding Path=HeroName}"/>
                 <!--Real Names-->
-                <materialDesign:DataGridTextColumn Header="Real Name" Binding="{Binding Path=realName}" SortMemberPath="{Binding Path=realName}"/>
+                <materialDesign:DataGridTextColumn Header="Real Name" Binding="{Binding Path=RealName, Mode=TwoWay}" SortMemberPath="{Binding Path=RealName}"/>
                 <!--Hero Weight-->
-                <materialDesign:DataGridTextColumn Header="Weight" Binding="{Binding Path=weight}" SortMemberPath="{Binding Path=weight}"/>
+                <materialDesign:DataGridTextColumn Header="Weight" Binding="{Binding Path=Weight, Mode=TwoWay}" SortMemberPath="{Binding Path=Weight}"/>
                 <!--Hero Height-->
-                <materialDesign:DataGridTextColumn Header="Height" Binding="{Binding Path=height}" SortMemberPath="{Binding Path=height}"/>
+                <materialDesign:DataGridTextColumn Header="Height" Binding="{Binding Path=Height, Mode=TwoWay}" SortMemberPath="{Binding Path=Height}"/>
                 <!--Hero Race-->
-                <materialDesign:DataGridComboBoxColumn Header="Race" ItemsSource="{Binding Source={StaticResource GetEnumValues}}" SelectedItemBinding="{Binding race}" SortMemberPath="{Binding Path=race}"/>
+                <materialDesign:DataGridComboBoxColumn Header="Race" ItemsSource="{Binding RaceTypeValues}" SelectedValueBinding="{Binding Race}"
+                            SortMemberPath="{Binding Path=Race}"/>
                 <!--Is the hero in a movie yet?-->
-                <DataGridCheckBoxColumn Header="InMovie" Binding="{Binding Path=inMovie}" SortMemberPath="{Binding Path=inMovie}"
+                <DataGridCheckBoxColumn Header="InMovie" Binding="{Binding Path=InMovie, Mode=TwoWay}" SortMemberPath="{Binding Path=InMovie}"
                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
             </DataGrid.Columns>
         </DataGrid>

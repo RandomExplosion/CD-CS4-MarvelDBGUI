@@ -17,12 +17,18 @@ namespace MarvelDB
     /// </summary>
     public partial class MarvelDBWindow : Window
     {
-
+        //Singleton
+        public static MarvelDBWindow Window;
         public HeroTable dbTable;
+        public static bool initDone = false;
+
 
         public MarvelDBWindow()
         {
             InitializeComponent();
+
+            //Singleton Static Reference
+            Window = this;
 
             //Check If Save File Exists and if not create it
             if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MarvelDB", "Database.csv")))
@@ -37,60 +43,213 @@ namespace MarvelDB
             //Load the database into a table
             HeroTableGrid.DataContext = dbTable.heroesByName;
             HeroTableGrid.CellEditEnding += HeroTableGrid_CellEditEnding;
+
+            //Start tracking changes to the table
+            initDone = true;
         }
 
-        //ValidateInput
+        //Detect Cell Change
         private void HeroTableGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            //TODO: IMPLIMENT DATA VALIDATION
+            //Save Database to CSV
+            //dbTable.SaveToCSV("Database.csv");
+            //object op = e.EditingElement.GetValue()
         }
-
     }
 
     //Race Enum
     [System.Serializable]
     public enum Race { Human = 1, Alien = 2, Animal = 3, Supernatural = 4 }
-
-    public class SuperHero /*: INotifyPropertyChanged*/
+    
+    public class SuperHero : INotifyPropertyChanged, IEditableObject
     {
-        public string heroName { get; set; } /*{ get { return heroName; } set { heroName = value; RaisePropertyChanged("heroName"); } }*/
-        public string realName { get; set; }
-        public double weight { get; set; }
-        public double height { get; set; }
-        public Race race { get; set; }
-        public bool inMovie { get; set; }
-
-        public SuperHero(string _heroName, string _realName, double _weight, double _height, Race _race, bool _inMovie)
+        private string _heroName;   //Private Internally Used Field
+        public string HeroName      //Publicly Accessible Field
         {
-            heroName = _heroName;
-            realName = _realName;
-            weight = _weight;
-            height = _height;
-            race = _race;
-            inMovie = _inMovie;
+            get
+            {
+                return _heroName;
+            }
+
+            set
+            {
+                if (_heroName == value) return;
+                _heroName = value;
+                OnPropertyChanged("HeroName");
+            }
         }
 
-        //PropertyChanged Event
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //private void RaisePropertyChanged(string propertyName)
+        private string _realName;   //Private Internally Used Field
+        public string RealName      //Publicly Accessible Field
+        {
+            get
+            {
+                return _realName;
+            }
+
+            set
+            {
+                if (_realName == value) return;
+                _realName = value;
+                OnPropertyChanged("RealName");
+            }
+        }
+
+        private double _weight;     //Private Internally Used Field
+        public double Weight        //Publicly Accessible Field
+        {
+            get
+            {
+                return _weight;
+            }
+
+            set
+            {
+                if (_weight == value) return;
+                _weight = value;
+                OnPropertyChanged("Weight");
+            }
+        }
+
+
+        private double _height;     //Private Internally Used Field
+        public double Height        //Publicly Accessible Field
+        {
+            get
+            {
+                return _height;
+            }
+
+            set
+            {
+                if (_height == value) return;
+                _height = value;
+                OnPropertyChanged("Height");
+            }
+        }
+
+        private Race _race;         //Private Internally Used Field
+
+        public string RaceStr
+        {
+            get { return _race.ToString(); }
+        }
+
+        //public int RaceId
         //{
-        //    if (this.PropertyChanged != null)
-        //        this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        //    get
+        //    {
+        //        return (int)_race;
+        //    }
+
+        //    set
+        //    {
+        //        if (value > 4) { RaceId = 4; return; }
+        //        Race = (Race)value;
+        //    }
         //}
 
-        //Unused
+        public IEnumerable<Race> RaceTypeValues
+        {
+            get
+            {
+                return Enum.GetValues(typeof(Race))
+                    .Cast<Race>();
+            }
+        }
 
-        //public void ModifyData(string _heroName, string _realName, double _weight, double _height, Race _race, bool _inMovie)
-        //{
-        //    heroName = _heroName;
-        //    realName = _realName;
-        //    weight = _weight;
-        //    height = _height;
-        //    race = _race;
-        //    inMovie = _inMovie;
-        //}
+        public Race Race            //Publicly Accessible Field
+        {
+            get
+            {
+                return _race;
+            }
 
+            set
+            {
+                if (_race == value) return;
+                _race = value;
+                OnPropertyChanged("Race");
+            }
+        }
 
+        private bool _inMovie;         //Private Internally Used Field
+        public bool InMovie         //Publicly Accessible Field
+        {
+            get
+            {
+                return _inMovie;
+            }
+
+            set
+            {
+                if (_inMovie == value) return;
+                _inMovie = value;
+                OnPropertyChanged("InMovie");
+            }
+        }
+
+        public SuperHero(string heroName, string realName, double weight, double height, Race race, bool inMovie)
+        {
+            HeroName = heroName;
+            RealName = realName;
+            Weight = weight;
+            Height = height;
+            Race = race;
+            InMovie = inMovie;
+        }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this,
+                    new PropertyChangedEventArgs(propertyName));
+                if (MarvelDBWindow.initDone == true)
+                {
+                    MarvelDBWindow.Window.dbTable.SaveToCSV("Database.csv"); 
+                }
+            }
+        }
+
+        #endregion
+
+        #region IEditableObject
+
+        private SuperHero _backupCopy;
+        private bool _inEdit;
+
+        public void BeginEdit()
+        {
+            if (_inEdit) return;
+            _inEdit = true;
+            _backupCopy = this.MemberwiseClone() as SuperHero;
+        }
+
+        public void CancelEdit()
+        {
+            if (!_inEdit) return;
+            _inEdit = false;
+            this.HeroName = _backupCopy.HeroName;
+            this.RealName = _backupCopy.RealName;
+            this.Weight = _backupCopy.Weight;
+            this.Height = _backupCopy.Height;
+            this.Race = _backupCopy.Race;
+            this.InMovie = _backupCopy.InMovie;
+        }
+
+        public void EndEdit()
+        {
+            if (!_inEdit) return;
+            _inEdit = false;
+            _backupCopy = null;
+        }
+
+        #endregion
     }
 
     [System.Serializable]
@@ -118,10 +277,9 @@ namespace MarvelDB
                         tempList.Add(value);
                     }
 
-                    Race tempRace;
-                    tempRace = Enum.Parse<Race>(tempList[4]);
+                    Race tempRace = Enum.Parse<Race>(tempList[4]);
 
-                    //Add the row's hero to th
+                    //Add the row's hero to the csv file
                     heroesByName.Add(new SuperHero(tempList[0], tempList[1], Convert.ToDouble(tempList[2]), Convert.ToDouble(tempList[3]), tempRace, Convert.ToBoolean(tempList[5])));
 
                     Console.WriteLine();
@@ -141,12 +299,12 @@ namespace MarvelDB
                 {
                     CsvRow row = new CsvRow();
 
-                    row.Add(heroValue.heroName);
-                    row.Add(heroValue.realName);
-                    row.Add(heroValue.weight.ToString());
-                    row.Add(heroValue.weight.ToString());
-                    row.Add(heroValue.race.ToString());
-                    row.Add(heroValue.inMovie.ToString());
+                    row.Add(heroValue.HeroName);
+                    row.Add(heroValue.RealName);
+                    row.Add(heroValue.Weight.ToString());
+                    row.Add(heroValue.Height.ToString());
+                    row.Add(heroValue.Race.ToString());
+                    row.Add(heroValue.InMovie.ToString());
 
 
                     writer.WriteRow(row);
