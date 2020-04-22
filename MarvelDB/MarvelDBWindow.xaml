@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MarvelDB"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -13,8 +14,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib">
+        FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Window.Resources>
         <!--Menu Expand Animation--><!--
@@ -31,13 +31,13 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="70"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>-->
-        
+
         <!--Data Provider for Enum Types-->
-        <!--<ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="GetEnumValues">
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type core:Enum}" x:Key="GetEnumValues">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="local:Race"/>
             </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>-->
+        </ObjectDataProvider>
     </Window.Resources>
 
     <Window.Triggers>
@@ -93,7 +93,7 @@
                 <!--Hero Height-->
                 <materialDesign:DataGridTextColumn Header="Height" Binding="{Binding Path=Height, Mode=TwoWay}" SortMemberPath="{Binding Path=Height}"/>
                 <!--Hero Race-->
-                <materialDesign:DataGridComboBoxColumn Header="Race" ItemsSource="{Binding RaceTypeValues}" SelectedValueBinding="{Binding Race}"
+                <materialDesign:DataGridComboBoxColumn Header="Race" ItemsSource="{Binding Source={StaticResource GetEnumValues}}" SelectedItemBinding="{Binding Race}"
                             SortMemberPath="{Binding Path=Race}"/>
                 <!--Is the hero in a movie yet?-->
                 <DataGridCheckBoxColumn Header="InMovie" Binding="{Binding Path=InMovie, Mode=TwoWay}" SortMemberPath="{Binding Path=InMovie}"
