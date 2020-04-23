@@ -32,12 +32,26 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>-->
 
-        <!--Data Provider for Enum Types-->
-        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type core:Enum}" x:Key="GetEnumValues">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:Race"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ListBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <!--Data Provider for Enum Types-->
+            <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type core:Enum}" x:Key="GetEnumValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:Race"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+
+     
     </Window.Resources>
 
     <Window.Triggers>
@@ -66,7 +80,11 @@
             <TextBlock HorizontalAlignment="Center" Text="MarvelDB SuperHero Database" TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Center" FontFamily="Roboto" FontWeight="Bold" FontSize="16"/>
         </materialDesign:Card>
 
-        
+
+        <StackPanel Grid.Column="0" Grid.Row="1" >
+            <Button x:Name="AddHeroButton" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100" ToolTip="Add a new Hero">Add Hero</Button>
+            <Button x:Name="RemoveHeroButton" Style="{StaticResource MaterialDesignRaisedButton}" Width="100" ToolTip="Add a new Hero">Remove</Button>
+        </StackPanel>
 
         <!--Data Table-->
         <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" GridLinesVisibility="All" ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CanUserAddRows="True">
@@ -100,6 +118,5 @@
                 ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
             </DataGrid.Columns>
         </DataGrid>
-
     </Grid>
 </Window>

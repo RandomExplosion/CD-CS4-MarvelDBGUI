@@ -42,18 +42,12 @@ namespace MarvelDB
 
             //Load the database into a table
             HeroTableGrid.DataContext = dbTable.heroesByName;
-            HeroTableGrid.CellEditEnding += HeroTableGrid_CellEditEnding;
+
+            AddHeroButton.Click += new RoutedEventHandler(dbTable.AddHero);
+            RemoveHeroButton.Click += new RoutedEventHandler(dbTable.RemoveSelectedHero);
 
             //Start tracking changes to the table
             initDone = true;
-        }
-
-        //Detect Cell Change
-        private void HeroTableGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            //Save Database to CSV
-            //dbTable.SaveToCSV("Database.csv");
-            //object op = e.EditingElement.GetValue()
         }
     }
 
@@ -256,6 +250,24 @@ namespace MarvelDB
     public class HeroTable
     {
         public ObservableCollection<SuperHero> heroesByName { get; set; }
+
+        //Add a new hero entry
+        public void AddHero(object sender, RoutedEventArgs e)
+        {
+            SuperHero newHero = new SuperHero("New Hero", "New Hero", 0, 0, Race.Human, false);
+            heroesByName.Add(newHero);
+        }
+
+        //Remove Hero Entry
+        public void RemoveSelectedHero(object sender, RoutedEventArgs e)
+        {
+            int index = MarvelDBWindow.Window.HeroTableGrid.SelectedIndex;
+            if (index != -1)
+            {
+                heroesByName.Remove(heroesByName[index]); 
+            }
+
+        }
 
         //Load the data from the csv database
         public void LoadFromCSV(string fileName)
