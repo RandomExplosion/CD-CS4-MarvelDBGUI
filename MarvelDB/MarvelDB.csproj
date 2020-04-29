@@ -4,7 +4,19 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <StartupObject>MarvelDB.App</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <COMReference Include="MSXML2.dll">
+      <Guid>f5078f18-c551-11d3-89b9-0000f81fe221</Guid>
+      <VersionMajor>6</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+    </COMReference>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />

@@ -9,6 +9,7 @@ using CSVUtility;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
+using MaterialDesignThemes.Wpf;
 
 namespace MarvelDB
 {
@@ -48,6 +49,22 @@ namespace MarvelDB
 
             //Start tracking changes to the table
             initDone = true;
+        }
+
+        private void DeleteConfirm_OnClosing(object sender, DialogClosingEventArgs eventArgs)
+        {
+            //Current Row Index
+            int index = MarvelDBWindow.Window.HeroTableGrid.SelectedIndex;
+
+            if (Equals(eventArgs.Parameter, true))
+            {
+                dbTable.heroesByName.Remove(dbTable.heroesByName[index]);
+                dbTable.SaveToCSV("Database.csv"); 
+            }
+            else
+            {
+
+            }
         }
     }
 
@@ -264,7 +281,20 @@ namespace MarvelDB
             int index = MarvelDBWindow.Window.HeroTableGrid.SelectedIndex;
             if (index != -1)
             {
-                heroesByName.Remove(heroesByName[index]); 
+
+                //OLD CONFIRMATION PROMPT
+                ////Prompt For Confirmation
+                //MessageBoxResult confirmationResult = MessageBox.Show($"Are you sure you want to delete this hero?\n\'{heroesByName[index].HeroName}\' will be lost forever! (A long time)", "Delete Hero", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+                //if (confirmationResult == MessageBoxResult.OK)
+                //{
+                //    heroesByName.Remove(heroesByName[index]);
+                //    SaveToCSV("Database.csv"); 
+                //}
+
+                //Prompt with dialogue (removal done in OnClosing)
+                MarvelDBWindow.Window.DeleteDialogueContent.Text = $"Are you sure you want to delete this hero?\n\'{heroesByName[index]}\' will be lost forever! (A long time)";
+                MarvelDBWindow.Window.ShowDialog(MarvelDBWindow.Window.RootGrid);
             }
 
         }

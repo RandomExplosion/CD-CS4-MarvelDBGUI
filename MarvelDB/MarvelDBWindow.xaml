@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:system="http://schemas.microsoft.com/winfx/2009/xaml"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -41,6 +42,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.RadioButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DialogHost.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <!--Data Provider for Enum Types-->
@@ -64,6 +66,7 @@
             <BeginStoryboard Storyboard="{StaticResource MenuCollapse}"/>
         </EventTrigger>-->
     </Window.Triggers>
+    
 
     <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
@@ -74,6 +77,37 @@
             <ColumnDefinition x:Name="SideBar" Width="2*"/>
             <ColumnDefinition x:Name="DataColumn" Width="8*"/>
         </Grid.ColumnDefinitions>
+
+        <!--Delete Hero Dialogue-->
+        <materialDesign:DialogHost x:Name="DeleteConfirmationDialogue" Grid.RowSpan="2" Grid.ColumnSpan="2" DialogClosing="DeleteConfirm_OnClosing" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <materialDesign:DialogHost.DialogContent>   
+                <StackPanel Margin="16">
+                    <TextBlock x:Name="DeleteDialogueContent"></TextBlock>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        IsDefault="True"
+                                        Margin="0 8 8 0"
+                                        Command="materialDesign:DialogHost.CloseDialogCommand">
+                            <Button.CommandParameter>
+                                <system:Boolean>True</system:Boolean>
+                            </Button.CommandParameter>
+                            I'M SURE
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        IsCancel="True"
+                                        Margin="0 8 8 0"
+                                        Command="materialDesign:DialogHost.CloseDialogCommand">
+                            <Button.CommandParameter>
+                                <system:Boolean>False</system:Boolean>
+                            </Button.CommandParameter>
+                            GO BACK!
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+        </materialDesign:DialogHost>
+
+
 
         <!--Window Header-->
         <materialDesign:Card Grid.ColumnSpan="2" Background="{DynamicResource MaterialDesignCardBackground}">
@@ -88,6 +122,7 @@
 
         <!--Data Table-->
         <DataGrid x:Name="HeroTableGrid" Grid.Row="1" Grid.Column="1" GridLinesVisibility="All" ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CanUserAddRows="True">
+
             <DataGrid.Resources>
                 <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
                     <Setter Property="Padding" Value="-2"/>
