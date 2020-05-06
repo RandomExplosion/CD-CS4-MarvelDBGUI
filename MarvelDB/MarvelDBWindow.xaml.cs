@@ -22,7 +22,9 @@ namespace MarvelDB
         public HeroTable dbTable;
         public static bool initDone = false;
 
-
+        /// <summary>
+        /// Initialisation, Checks the existence of a database file and loads it, sets up the ui
+        /// </summary>
         public MarvelDBWindow()
         {
             InitializeComponent();
@@ -62,7 +64,7 @@ namespace MarvelDB
     public class SuperHero : INotifyPropertyChanged, IEditableObject
     {
         private string _heroName;   //Private Internally Used Field
-        public string HeroName      //Publicly Accessible Field
+        public string HeroName      //Publicly Accessible Setter
         {
             get
             {
@@ -78,7 +80,7 @@ namespace MarvelDB
         }
 
         private string _realName;   //Private Internally Used Field
-        public string RealName      //Publicly Accessible Field
+        public string RealName      //Publicly Accessible Setter
         {
             get
             {
@@ -94,7 +96,7 @@ namespace MarvelDB
         }
 
         private double _weight;     //Private Internally Used Field
-        public double Weight        //Publicly Accessible Field
+        public double Weight        //Publicly Accessible Setter
         {
             get
             {
@@ -111,7 +113,7 @@ namespace MarvelDB
 
 
         private double _height;     //Private Internally Used Field
-        public double Height        //Publicly Accessible Field
+        public double Height        //Publicly Accessible Setter
         {
             get
             {
@@ -128,7 +130,7 @@ namespace MarvelDB
 
         private Race _race;         //Private Internally Used Field
 
-        public string RaceStr
+        public string RaceStr   //Publicly Accessible Setter
         {
             get { return _race.ToString(); }
         }
@@ -156,7 +158,7 @@ namespace MarvelDB
             }
         }
 
-        public Race Race            //Publicly Accessible Field
+        public Race Race            //Publicly Accessible Setter
         {
             get
             {
@@ -172,7 +174,7 @@ namespace MarvelDB
         }
 
         private bool _inMovie;         //Private Internally Used Field
-        public bool InMovie         //Publicly Accessible Field
+        public bool InMovie         //Publicly Accessible Setter
         {
             get
             {
@@ -187,6 +189,15 @@ namespace MarvelDB
             }
         }
 
+        /// <summary>
+        /// Constructor that takes all the values
+        /// </summary>
+        /// <param name="heroName"></param>
+        /// <param name="realName"></param>
+        /// <param name="weight"></param>
+        /// <param name="height"></param>
+        /// <param name="race"></param>
+        /// <param name="inMovie"></param>
         public SuperHero(string heroName, string realName, double weight, double height, Race race, bool inMovie)
         {
             HeroName = heroName;
@@ -250,9 +261,15 @@ namespace MarvelDB
         #endregion
     }
 
+    /// <summary>
+    /// Class for interfacing with the loaded database
+    /// </summary>
     [System.Serializable]
     public class HeroTable
     {
+        /// <summary>
+        /// Hero List referenced by ui
+        /// </summary>
         public ObservableCollection<SuperHero> heroesByName { get; set; }
 
         //Add a new hero entry
