@@ -9,6 +9,7 @@ using CSVUtility;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MarvelDB
 {
@@ -39,8 +40,6 @@ namespace MarvelDB
             {
                 Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MarvelDB"));
                 File.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MarvelDB", "Database.csv")).Close();
-
-                System.Threading.Thread.Sleep(1000);
             }
 
             dbTable = new HeroTable();
@@ -49,11 +48,50 @@ namespace MarvelDB
             //Load the database into a table
             HeroTableGrid.DataContext = dbTable.heroesByName;
 
-            AddHeroButton.Click += new RoutedEventHandler(dbTable.AddHero);
-            RemoveHeroButton.Click += new RoutedEventHandler(dbTable.RemoveSelectedHero);
+            //Event listeners
+                //Buttons
+                AddHeroButton.Click += new RoutedEventHandler(dbTable.AddHero);
+                RemoveHeroButton.Click += new RoutedEventHandler(dbTable.RemoveSelectedHero);
+
+            //Chip
+            //HeroTableGrid.CellEditEnding += delegate { SaveIndicator.Text = "All Changes Saved"; };
+
 
             //Start tracking changes to the table
             initDone = true;
+        }
+
+        //Detect ctrl+s and save database
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.S)
+            {
+                dbTable.SaveToCSV("Database.csv");
+                Title = "MarvelDB";
+            }
+        }
+
+        //Detect window close and prompt for confirmation if unsaved
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //If there are unsaved changes
+            if (Title == "MarvelDB - Unsaved Changes")
+            {
+                MessageBoxResult msgresult = MessageBox.Show("There are unsaved changes! Are you sure you want to quit?", "Unsaved Changes", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                switch (msgresult)
+                {
+                    case MessageBoxResult.Yes:
+                        return;
+
+                    case MessageBoxResult.No:
+                        e.Cancel = true;
+                        break;
+
+                    case MessageBoxResult.None:
+                        e.Cancel = true;
+                        break;
+                }
+            }
         }
     }
 
@@ -220,7 +258,8 @@ namespace MarvelDB
                     new PropertyChangedEventArgs(propertyName));
                 if (MarvelDBWindow.initDone == true)
                 {
-                    MarvelDBWindow.Window.dbTable.SaveToCSV("Database.csv"); 
+                    MarvelDBWindow.Window.Title = "MarvelDB - Unsaved Changes";
+                    //MarvelDBWindow.Window.dbTable.SaveToCSV("Database.csv"); 
                 }
             }
         }
@@ -288,6 +327,7 @@ namespace MarvelDB
                 heroesByName.Remove(heroesByName[index]); 
             }
 
+            MarvelDBWindow.Window.Title = "MarvelDBWindow - Unsaved Changes";
         }
 
         //Load the data from the csv database

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MarvelDB"
         xmlns:core="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MarvelDB" Height="450" Width="800" KeyDown="Window_KeyDown" Closing="Window_Closing"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -17,14 +17,17 @@
         FontFamily="{DynamicResource MaterialDesignFont}">
 
     <Window.Resources>
-        <!--Menu Expand Animation--><!--
+        <!--Menu Expand Animation-->
+        <!--
         <Storyboard x:Key="MenuExpand">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="MenuPanel">
                 <EasingDoubleKeyFrame KeyTime="0" Value="70"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
-        --><!--Menu Collapse Animation--><!--
+        -->
+        <!--Menu Collapse Animation-->
+        <!--
         <Storyboard x:Key="MenuCollapse">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="MenuPanel">
                 <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
@@ -51,15 +54,18 @@
             </ObjectDataProvider>
         </ResourceDictionary>
 
-     
+
     </Window.Resources>
 
     <Window.Triggers>
-        <!--Menu Expand Event--><!--
+        <!--Menu Expand Event-->
+        <!--
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonMenuExpand">
             <BeginStoryboard Storyboard="{StaticResource MenuExpand}"/>
         </EventTrigger>
-        --><!--Menu Collapse Event--><!--
+        -->
+        <!--Menu Collapse Event-->
+        <!--
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonMenuCollapse">
             <BeginStoryboard Storyboard="{StaticResource MenuCollapse}"/>
         </EventTrigger>-->
@@ -82,8 +88,8 @@
 
 
         <StackPanel Grid.Column="0" Grid.Row="1" >
-            <Button x:Name="AddHeroButton" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100" ToolTip="Add a new Hero">Add Hero</Button>
-            <Button x:Name="RemoveHeroButton" Style="{StaticResource MaterialDesignRaisedButton}" Width="100" ToolTip="Add a new Hero">Remove</Button>
+            <Button x:Name="AddHeroButton" Style="{DynamicResource MaterialDesignRaisedAccentButton}" Width="100" ToolTip="Add a new Hero">Add Hero</Button>
+            <Button x:Name="RemoveHeroButton" Style="{DynamicResource MaterialDesignRaisedButton}" Width="100" ToolTip="Add a new Hero">Remove</Button>
         </StackPanel>
 
         <!--Data Table-->
@@ -103,20 +109,24 @@
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <!--Hero Names-->
-                <materialDesign:DataGridTextColumn Header="Hero Name" Binding="{Binding Path=HeroName, Mode=TwoWay}" SortMemberPath="{Binding Path=HeroName}"/>
+                <materialDesign:DataGridTextColumn ElementStyle="{DynamicResource MaterialDesignTextBlock}" Header="Hero Name" Binding="{Binding Path=HeroName, Mode=TwoWay}" SortMemberPath="{Binding Path=HeroName}"/>
                 <!--Real Names-->
-                <materialDesign:DataGridTextColumn Header="Real Name" Binding="{Binding Path=RealName, Mode=TwoWay}" SortMemberPath="{Binding Path=RealName}"/>
+                <materialDesign:DataGridTextColumn ElementStyle="{DynamicResource MaterialDesignTextBlock}" Header="Real Name" Binding="{Binding Path=RealName, Mode=TwoWay}" SortMemberPath="{Binding Path=RealName}"/>
                 <!--Hero Weight-->
-                <materialDesign:DataGridTextColumn Header="Weight" Binding="{Binding Path=Weight, Mode=TwoWay}" SortMemberPath="{Binding Path=Weight}"/>
+                <materialDesign:DataGridTextColumn ElementStyle="{DynamicResource MaterialDesignTextBlock}" Header="Weight (KG)" Binding="{Binding Path=Weight, Mode=TwoWay}" SortMemberPath="{Binding Path=Weight}"/>
                 <!--Hero Height-->
-                <materialDesign:DataGridTextColumn Header="Height" Binding="{Binding Path=Height, Mode=TwoWay}" SortMemberPath="{Binding Path=Height}"/>
+                <materialDesign:DataGridTextColumn ElementStyle="{DynamicResource MaterialDesignTextBlock}" Header="Height (CM)" Binding="{Binding Path=Height, Mode=TwoWay}" SortMemberPath="{Binding Path=Height}"/>
                 <!--Hero Race-->
                 <materialDesign:DataGridComboBoxColumn Header="Race" ItemsSource="{Binding Source={StaticResource GetEnumValues}}" SelectedItemBinding="{Binding Race}"
                             SortMemberPath="{Binding Path=Race}"/>
                 <!--Is the hero in a movie yet?-->
                 <DataGridCheckBoxColumn Header="InMovie" Binding="{Binding Path=InMovie, Mode=TwoWay}" SortMemberPath="{Binding Path=InMovie}"
-                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
+                ElementStyle="{DynamicResource MaterialDesignDataGridCheckBoxColumnStyle}" EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}"/>
             </DataGrid.Columns>
         </DataGrid>
+        <materialDesign:Chip Style ="{DynamicResource MaternialDesignChip}" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="Auto" Visibility="Hidden">
+            <TextBlock x:Name="SaveIndicator" Style="{DynamicResource MaterialDesignTextBlock}" Visibility="Visible">Press enter to save</TextBlock>
+        </materialDesign:Chip>
+
     </Grid>
 </Window>
